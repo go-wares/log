@@ -18,6 +18,7 @@ package log
 import (
 	"fmt"
 	"github.com/go-wares/log/config"
+	"os"
 )
 
 func Debug(format string, args ...interface{}) {
@@ -41,5 +42,27 @@ func Warn(format string, args ...interface{}) {
 }
 
 func term(level config.Level, format string, args []interface{}) {
-	println(fmt.Sprintf("[%s] %s", level, fmt.Sprintf(format, args...)))
+	str := fmt.Sprintf("[%s] %s", level, fmt.Sprintf(format, args...))
+
+	switch level {
+	case config.Fatal:
+		str = fmt.Sprintf("%c[%d;%d;%dm%s%c[0m",
+			0x1B, 0, 41, 33, str, 0x1B,
+		)
+	case config.Error:
+		str = fmt.Sprintf("%c[%d;%d;%dm%s%c[0m",
+			0x1B, 0, 0, 31, str, 0x1B,
+		)
+	case config.Warn:
+		str = fmt.Sprintf("%c[%d;%d;%dm%s%c[0m",
+			0x1B, 0, 0, 33, str, 0x1B,
+		)
+	case config.Info:
+		str = fmt.Sprintf("%c[%d;%d;%dm%s%c[0m",
+			0x1B, 0, 0, 34, str, 0x1B,
+		)
+	default:
+	}
+
+	_, _ = fmt.Fprintln(os.Stdout, str)
 }
