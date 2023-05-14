@@ -24,15 +24,28 @@ var (
 	// 系统资源.
 	//
 	//   {
-	//       "host": "127.0.0.1"
+	//       "deploy.addr": "127.0.0.1",
+	//       "deploy.arch": "darwin/amd64",
+	//       "deploy.go": "go1.18.2",
+	//       "deploy.host": "fuyibing",
+	//       "deploy.pid": 3721
 	//   }
 	Resource = make(Attr)
 )
 
 type (
+	// Attr
+	// 属性.
+	//
+	//   {
+	//       "id": 1,
+	//       "key": "value"
+	//   }
 	Attr map[string]interface{}
 )
 
+// Set
+// 设置Key/Value.
 func (o Attr) Set(key string, value interface{}) Attr {
 	if o != nil {
 		o[key] = value
@@ -40,6 +53,8 @@ func (o Attr) Set(key string, value interface{}) Attr {
 	return o
 }
 
+// Json
+// 转为JSON字符串.
 func (o Attr) Json() string {
 	buf, _ := json.Marshal(o)
 	return string(buf)

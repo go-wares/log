@@ -29,5 +29,3 @@ func NewTracing() *Tracing {
 		SpanId: NewSpanId(),
 	}
 }
-
-func (o *Tracing) InitTraceId() {}

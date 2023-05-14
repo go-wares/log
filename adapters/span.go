@@ -44,22 +44,32 @@ type (
 		// 结束时间.
 		EndTime() time.Time
 
+		// Logs
+		// 获取日志列表.
 		Logs() []*Line
 
+		// Name
+		// 获取名称.
 		Name() string
 
+		// ParentSpanId
+		// 上级跨度ID.
 		ParentSpanId() SpanId
 
 		// Release
 		// 释放回池.
 		Release()
 
+		// SpanId
+		// 跨度ID.
 		SpanId() SpanId
 
 		// StartTime
 		// 开始时间.
 		StartTime() time.Time
 
+		// Trace
+		// 获取链路.
 		Trace() Trace
 
 		Debug(format string, args ...interface{})

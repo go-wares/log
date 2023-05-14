@@ -21,7 +21,7 @@ import (
 
 type (
 	// Bucket
-	// 日志数据桶.
+	// 数据桶.
 	Bucket struct {
 		lines []interface{}
 		mu    sync.RWMutex
@@ -37,7 +37,7 @@ func NewBucket() *Bucket {
 }
 
 // Add
-// 添加日志入桶.
+// 添加数据入桶.
 func (o *Bucket) Add(lines ...interface{}) int {
 	o.mu.Lock()
 	defer o.mu.Unlock()
@@ -46,7 +46,7 @@ func (o *Bucket) Add(lines ...interface{}) int {
 }
 
 // Count
-// 获取桶日志数量.
+// 获取桶数据数量.
 func (o *Bucket) Count() int {
 	o.mu.RLock()
 	defer o.mu.RUnlock()
@@ -54,7 +54,7 @@ func (o *Bucket) Count() int {
 }
 
 // Pop
-// 取出1条日志.
+// 取出1条数据.
 func (o *Bucket) Pop() interface{} {
 	if v, count := o.Popn(1); count == 1 {
 		return v[0]
@@ -63,7 +63,7 @@ func (o *Bucket) Pop() interface{} {
 }
 
 // Popn
-// 取出N条日志.
+// 取出N条数据.
 func (o *Bucket) Popn(n int) (list []interface{}, count int) {
 	o.mu.Lock()
 	defer o.mu.Unlock()

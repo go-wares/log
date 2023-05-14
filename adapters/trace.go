@@ -33,6 +33,8 @@ type (
 		// 链路名称.
 		Name() string
 
+		// TraceId
+		// 获取链路ID.
 		TraceId() TraceId
 	}
 )

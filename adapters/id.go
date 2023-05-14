@@ -24,12 +24,14 @@ import (
 )
 
 var (
+	// ID
+	// 生成ID实例.
 	ID Identify
 )
 
 type (
 	// Identify
-	// 链路与跨度ID操作.
+	// 生成链路/跨度ID接口.
 	Identify interface {
 		// Byte
 		// 从 String 转成 Byte.

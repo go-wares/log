@@ -24,11 +24,15 @@ import (
 
 type (
 	// Field
-	// 带字段的日志.
+	// 自定义字段.
 	//
 	//   log.Field{"key": "value"}.Info("info")
 	Field map[string]interface{}
 )
+
+// +---------------------------------------------------------------------------+
+// | Logger methods                                                            |
+// +---------------------------------------------------------------------------+
 
 func (o Field) Debug(text string) {
 	if config.Config.DebugOn() {
@@ -60,6 +64,10 @@ func (o Field) Fatal(text string) {
 	}
 }
 
+// +---------------------------------------------------------------------------+
+// | Logger methods with formatter                                             |
+// +---------------------------------------------------------------------------+
+
 func (o Field) Debugf(format string, args ...interface{}) {
 	if config.Config.DebugOn() {
 		managers.Manager.Log(nil, o, base.Debug, format, args...)
@@ -89,6 +97,10 @@ func (o Field) Fatalf(format string, args ...interface{}) {
 		managers.Manager.Log(nil, o, base.Fatal, format, args...)
 	}
 }
+
+// +---------------------------------------------------------------------------+
+// | Logger methods with formatter and context                                 |
+// +---------------------------------------------------------------------------+
 
 func (o Field) Debugfc(ctx context.Context, format string, args ...interface{}) {
 	if config.Config.DebugOn() {

@@ -22,6 +22,10 @@ import (
 	"github.com/go-wares/log/managers"
 )
 
+// +---------------------------------------------------------------------------+
+// | Logger methods                                                            |
+// +---------------------------------------------------------------------------+
+
 func Debug(text string) {
 	if config.Config.DebugOn() {
 		managers.Manager.Log(nil, nil, base.Debug, text)
@@ -52,6 +56,10 @@ func Fatal(text string) {
 	}
 }
 
+// +---------------------------------------------------------------------------+
+// | Logger methods with formatter                                             |
+// +---------------------------------------------------------------------------+
+
 func Debugf(format string, args ...interface{}) {
 	if config.Config.DebugOn() {
 		managers.Manager.Log(nil, nil, base.Debug, format, args...)
@@ -81,6 +89,10 @@ func Fatalf(format string, args ...interface{}) {
 		managers.Manager.Log(nil, nil, base.Fatal, format, args...)
 	}
 }
+
+// +---------------------------------------------------------------------------+
+// | Logger methods with formatter and context                                 |
+// +---------------------------------------------------------------------------+
 
 func Debugfc(ctx context.Context, format string, args ...interface{}) {
 	if config.Config.DebugOn() {
