@@ -85,14 +85,6 @@ func Backstack() *Stack {
 			break
 		}
 
-		// fmt.Printf("-------------------[%s]\n", call)
-		//
-		// if call == "panic" {
-		// 	println("---------- panic ---", call)
-		// 	stack.Items = make([]StackItem, 0)
-		// 	continue
-		// }
-
 		// Init item struct.
 		item := StackItem{
 			Call:     call,
@@ -130,28 +122,14 @@ func Backstack() *Stack {
 	return stack
 }
 
-func (o *Stack) InternalString() string {
+func (o *Stack) String() string {
 	var list = make([]string, 0)
 	for _, item := range o.Items {
-		list = append(list, fmt.Sprintf("%s %s:%d",
+		list = append(list, fmt.Sprintf("%s - %s:%d",
 			item.Call,
 			item.File,
 			item.Line,
 		))
-	}
-	return strings.Join(list, "\n")
-}
-
-func (o *Stack) String() string {
-	var list = make([]string, 0)
-	for _, item := range o.Items {
-		if !item.Internal {
-			list = append(list, fmt.Sprintf("%s - %s:%d",
-				item.Call,
-				item.File,
-				item.Line,
-			))
-		}
 	}
 	return strings.Join(list, "\n")
 }

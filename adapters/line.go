@@ -19,6 +19,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-wares/log/base"
+	"github.com/go-wares/log/config"
 	"sync"
 	"time"
 )
@@ -37,8 +38,9 @@ type (
 		Text  string
 		Time  time.Time
 
-		SpanId, ParentSpanId string
+		Tracer               bool
 		TraceId              string
+		SpanId, ParentSpanId string
 	}
 )
 
@@ -65,20 +67,31 @@ func (o *Line) after() *Line {
 	o.Ctx = nil
 	o.Level = base.Off
 	o.Text = ""
+
+	if o.Tracer {
+		o.Tracer = false
+		o.TraceId = ""
+		o.SpanId = ""
+		o.ParentSpanId = ""
+	}
+
 	return o
 }
 
+// 初始字段.
 func (o *Line) before(ctx context.Context, level base.LogLevel, format string, args ...interface{}) *Line {
+	// 1. 必须字段.
 	o.Ctx = ctx
 	o.Level = level
 	o.Time = time.Now()
 	o.Text = fmt.Sprintf(format, args...)
 
-	// 堆椎清单.
+	// 2. 堆栈日志.
 	if level == base.Fatal {
-		o.Text = fmt.Sprintf("%s\n%s", o.Text, Backstack().InternalString())
+		o.Text = fmt.Sprintf("%s\n%s", o.Text, Backstack().String())
 	}
 
+	// 3. 关联链路.
 	if ctx != nil {
 		o.openTracing(ctx)
 	}
@@ -86,10 +99,47 @@ func (o *Line) before(ctx context.Context, level base.LogLevel, format string, a
 	return o
 }
 
-func (o *Line) init() *Line {
-	return o
-}
+// 构造实例.
+func (o *Line) init() *Line { return o }
 
+// 关联链路.
 func (o *Line) openTracing(ctx context.Context) {
+	// 1. 基于: OpenTelemetry.
+	if g := ctx.Value(config.OpenTelemetrySpan); g != nil {
+		v := g.(Span)
 
+		o.Tracer = true
+		o.TraceId = v.Trace().TraceId().String()
+		o.SpanId = v.SpanId().String()
+
+		if p := v.ParentSpanId(); p != nil {
+			o.ParentSpanId = p.String()
+		}
+		return
+	}
+
+	// 2. 基于: OpenTracing
+	if s := ctx.Value(config.OpenTracingTraceId); s != nil {
+		if str, ok := s.(string); ok && len(str) == 32 {
+			o.Tracer = true
+			o.TraceId = str
+		}
+	}
+
+	// 3. 跨度参数.
+	if o.Tracer {
+		// 3.1 跨度ID.
+		if s := ctx.Value(config.OpenTracingSpanId); s != nil {
+			if str, ok := s.(string); ok && len(str) == 16 {
+				o.SpanId = str
+			}
+		}
+
+		// 3.2 上级跨度.
+		if s := ctx.Value(config.OpenTracingParentSpanId); s != nil {
+			if str, ok := s.(string); ok && len(str) == 16 {
+				o.ParentSpanId = str
+			}
+		}
+	}
 }

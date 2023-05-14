@@ -66,7 +66,7 @@ func (o *writer) Send(formatter *formatter, lines ...adapters.Span) {
 		// 1.1 捕获异常.
 		if r := recover(); r != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "jaeger fatal: %v\n%s\n", r,
-				adapters.Backstack().InternalString(),
+				adapters.Backstack().String(),
 			)
 		}
 	}()

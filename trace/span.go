@@ -74,6 +74,15 @@ func NewSpanFromRequest(req *http.Request, name string) adapters.Span {
 	return o
 }
 
+func SpanExists(ctx context.Context) (span adapters.Span, exists bool) {
+	if ctx != nil {
+		if v := ctx.Value(config.OpenTelemetrySpan); v != nil {
+			return v.(adapters.Span), true
+		}
+	}
+	return nil, false
+}
+
 func (o *span) Child(name string) adapters.Span {
 	// 1. 新建跨度.
 	v := spanPool.Get().(*span).before()

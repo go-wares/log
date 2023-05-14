@@ -41,3 +41,7 @@ func NewTrace(name string) adapters.Trace {
 func NewTraceFromContext(ctx context.Context, name string) adapters.Trace {
 	return trace.NewTraceFromContext(ctx, name)
 }
+
+func SpanExists(ctx context.Context) (span adapters.Span, exists bool) {
+	return trace.SpanExists(ctx)
+}
