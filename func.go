@@ -16,53 +16,98 @@
 package log
 
 import (
-	"fmt"
+	"context"
+	"github.com/go-wares/log/base"
 	"github.com/go-wares/log/config"
-	"os"
+	"github.com/go-wares/log/managers"
 )
 
-func Debug(format string, args ...interface{}) {
-	term(config.Debug, format, args)
-}
-
-func Error(format string, args ...interface{}) {
-	term(config.Error, format, args)
-}
-
-func Fatal(format string, args ...interface{}) {
-	term(config.Fatal, format, args)
-}
-
-func Info(format string, args ...interface{}) {
-	term(config.Info, format, args)
-}
-
-func Warn(format string, args ...interface{}) {
-	term(config.Warn, format, args)
-}
-
-func term(level config.Level, format string, args []interface{}) {
-	str := fmt.Sprintf("[%s] %s", level, fmt.Sprintf(format, args...))
-
-	switch level {
-	case config.Fatal:
-		str = fmt.Sprintf("%c[%d;%d;%dm%s%c[0m",
-			0x1B, 0, 41, 33, str, 0x1B,
-		)
-	case config.Error:
-		str = fmt.Sprintf("%c[%d;%d;%dm%s%c[0m",
-			0x1B, 0, 0, 31, str, 0x1B,
-		)
-	case config.Warn:
-		str = fmt.Sprintf("%c[%d;%d;%dm%s%c[0m",
-			0x1B, 0, 0, 33, str, 0x1B,
-		)
-	case config.Info:
-		str = fmt.Sprintf("%c[%d;%d;%dm%s%c[0m",
-			0x1B, 0, 0, 34, str, 0x1B,
-		)
-	default:
+func Debug(text string) {
+	if config.Config.DebugOn() {
+		managers.Manager.Log(nil, nil, base.Debug, text)
 	}
+}
 
-	_, _ = fmt.Fprintln(os.Stdout, str)
+func Info(text string) {
+	if config.Config.InfoOn() {
+		managers.Manager.Log(nil, nil, base.Info, text)
+	}
+}
+
+func Warn(text string) {
+	if config.Config.WarnOn() {
+		managers.Manager.Log(nil, nil, base.Warn, text)
+	}
+}
+
+func Error(text string) {
+	if config.Config.ErrorOn() {
+		managers.Manager.Log(nil, nil, base.Error, text)
+	}
+}
+
+func Fatal(text string) {
+	if config.Config.FatalOn() {
+		managers.Manager.Log(nil, nil, base.Fatal, text)
+	}
+}
+
+func Debugf(format string, args ...interface{}) {
+	if config.Config.DebugOn() {
+		managers.Manager.Log(nil, nil, base.Debug, format, args...)
+	}
+}
+
+func Infof(format string, args ...interface{}) {
+	if config.Config.InfoOn() {
+		managers.Manager.Log(nil, nil, base.Info, format, args...)
+	}
+}
+
+func Warnf(format string, args ...interface{}) {
+	if config.Config.WarnOn() {
+		managers.Manager.Log(nil, nil, base.Warn, format, args...)
+	}
+}
+
+func Errorf(format string, args ...interface{}) {
+	if config.Config.ErrorOn() {
+		managers.Manager.Log(nil, nil, base.Error, format, args...)
+	}
+}
+
+func Fatalf(format string, args ...interface{}) {
+	if config.Config.FatalOn() {
+		managers.Manager.Log(nil, nil, base.Fatal, format, args...)
+	}
+}
+
+func Debugfc(ctx context.Context, format string, args ...interface{}) {
+	if config.Config.DebugOn() {
+		managers.Manager.Log(ctx, nil, base.Debug, format, args...)
+	}
+}
+
+func Infofc(ctx context.Context, format string, args ...interface{}) {
+	if config.Config.InfoOn() {
+		managers.Manager.Log(ctx, nil, base.Info, format, args...)
+	}
+}
+
+func Warnfc(ctx context.Context, format string, args ...interface{}) {
+	if config.Config.WarnOn() {
+		managers.Manager.Log(ctx, nil, base.Warn, format, args...)
+	}
+}
+
+func Errorfc(ctx context.Context, format string, args ...interface{}) {
+	if config.Config.ErrorOn() {
+		managers.Manager.Log(ctx, nil, base.Error, format, args...)
+	}
+}
+
+func Fatalfc(ctx context.Context, format string, args ...interface{}) {
+	if config.Config.FatalOn() {
+		managers.Manager.Log(ctx, nil, base.Fatal, format, args...)
+	}
 }

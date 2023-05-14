@@ -11,18 +11,29 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-12
 
-package config
+package tests
 
-type (
-	Level string
+import (
+	"github.com/go-wares/log"
+	"github.com/go-wares/log/managers"
+	"testing"
+	"time"
 )
 
-const (
-	Debug Level = "DEBUG"
-	Info  Level = "INFO"
-	Warn  Level = "WARN"
-	Error Level = "ERROR"
-	Fatal Level = "FATAL"
-)
+func TestField(t *testing.T) {
+	defer func() {
+		managers.Manager.Stop()
+		t.Logf("test log adapter: stopped")
+	}()
+
+	time.Sleep(time.Millisecond)
+
+	field := log.Field{"key": "value", "uid": 1}
+	field.Debug("debug")
+	field.Info("info")
+	field.Warn("warn")
+	field.Error("error")
+	field.Fatal("fatal")
+}

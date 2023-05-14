@@ -11,20 +11,33 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-14
 
 package log
 
 import (
-	"github.com/go-wares/log/config"
-	"github.com/go-wares/log/managers"
-	"sync"
+	"context"
+	"github.com/go-wares/log/adapters"
+	"github.com/go-wares/log/trace"
+	"net/http"
 )
 
-func init() {
-	new(sync.Once).Do(func() {
-		if *config.Config.AutoStart {
-			go managers.Manager.Start()
-		}
-	})
+func NewSpan(name string) adapters.Span {
+	return trace.NewSpan(name)
+}
+
+func NewSpanFromContext(ctx context.Context, name string) adapters.Span {
+	return trace.NewSpanFromContext(ctx, name)
+}
+
+func NewSpanFromRequest(req *http.Request, name string) adapters.Span {
+	return trace.NewSpanFromRequest(req, name)
+}
+
+func NewTrace(name string) adapters.Trace {
+	return trace.NewTrace(name)
+}
+
+func NewTraceFromContext(ctx context.Context, name string) adapters.Trace {
+	return trace.NewTraceFromContext(ctx, name)
 }

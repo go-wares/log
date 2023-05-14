@@ -11,20 +11,36 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-13
 
-package log
+package adapters
 
 import (
-	"github.com/go-wares/log/config"
-	"github.com/go-wares/log/managers"
-	"sync"
+	"encoding/json"
 )
 
-func init() {
-	new(sync.Once).Do(func() {
-		if *config.Config.AutoStart {
-			go managers.Manager.Start()
-		}
-	})
+var (
+	// Resource
+	// 系统资源.
+	//
+	//   {
+	//       "host": "127.0.0.1"
+	//   }
+	Resource = make(Attr)
+)
+
+type (
+	Attr map[string]interface{}
+)
+
+func (o Attr) Set(key string, value interface{}) Attr {
+	if o != nil {
+		o[key] = value
+	}
+	return o
+}
+
+func (o Attr) Json() string {
+	buf, _ := json.Marshal(o)
+	return string(buf)
 }

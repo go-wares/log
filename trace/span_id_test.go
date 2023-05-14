@@ -11,20 +11,25 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-14
 
-package log
+package trace
 
 import (
-	"github.com/go-wares/log/config"
-	"github.com/go-wares/log/managers"
-	"sync"
+	"github.com/go-wares/log/adapters"
+	"testing"
 )
 
-func init() {
-	new(sync.Once).Do(func() {
-		if *config.Config.AutoStart {
-			go managers.Manager.Start()
-		}
-	})
+func TestNewSpanId(t *testing.T) {
+	s := adapters.NewSpanId()
+	t.Logf("span  id: %v", s.Body())
+	t.Logf("span str: %v", s.String())
+}
+
+func TestNewSpanId2(t *testing.T) {
+	// 06ECED2B5CDDDBA1
+	// [6 236 237 43 92 221 219 161]
+	s := adapters.NewSpanIdFromString("06ECED2B5CDDDBA1")
+	t.Logf("span  id: %v", s.Body())
+	t.Logf("span str: %v", s.String())
 }

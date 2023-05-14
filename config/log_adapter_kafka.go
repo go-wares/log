@@ -11,20 +11,38 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-13
 
-package log
+package config
 
-import (
-	"github.com/go-wares/log/config"
-	"github.com/go-wares/log/managers"
-	"sync"
+type (
+	// LogAdapterKafka
+	// 消息适配器配置.
+	//
+	//   # config/log.yaml
+	//
+	//   log_adapter: kafka
+	//   log_adapter_kafka:
+	//     address: 127.0.0.1:9092
+	//     topic: logs
+	LogAdapterKafka struct {
+		// 主机名.
+		//
+		// - 默认：127.0.0.1:9092
+		Host string
+
+		// 主题名.
+		//
+		// - 默认：logs
+		Topic string
+	}
 )
 
-func init() {
-	new(sync.Once).Do(func() {
-		if *config.Config.AutoStart {
-			go managers.Manager.Start()
-		}
-	})
+func (o *LogAdapterKafka) defaults() {
+	if o.Host == "" {
+		o.Host = defaultLogAdapterKafkaHost
+	}
+	if o.Topic == "" {
+		o.Topic = defaultLogAdapterKafkaTopic
+	}
 }

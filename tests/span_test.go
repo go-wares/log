@@ -11,20 +11,29 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-14
 
-package log
+package tests
 
 import (
-	"github.com/go-wares/log/config"
 	"github.com/go-wares/log/managers"
-	"sync"
+	"github.com/go-wares/log/trace"
+	"testing"
 )
 
-func init() {
-	new(sync.Once).Do(func() {
-		if *config.Config.AutoStart {
-			go managers.Manager.Start()
-		}
-	})
+func TestSpan(t *testing.T) {
+	defer managers.Manager.Stop()
+
+	s1 := trace.NewSpan("parent")
+	defer s1.End()
+
+	s1.Attr().Set("uid", 1).Set("key", "value")
+	s1.Info("info message on trace")
+
+	s2 := s1.Child("child s2")
+	defer s2.End()
+
+	s3 := s1.Child("child s3")
+	defer s3.End()
+
 }

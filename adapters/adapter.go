@@ -11,20 +11,46 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-12
 
-package log
+package adapters
 
 import (
-	"github.com/go-wares/log/config"
-	"github.com/go-wares/log/managers"
-	"sync"
+	"github.com/go-wares/log/base"
 )
 
-func init() {
-	new(sync.Once).Do(func() {
-		if *config.Config.AutoStart {
-			go managers.Manager.Start()
-		}
-	})
-}
+type (
+	// LogAdapter
+	// 日志适配器.
+	LogAdapter interface {
+		// Keeper
+		// 协程保持.
+		Keeper() base.Keeper
+
+		// Send
+		// 发送日志.
+		Send(line *Line)
+
+		// SetFormatter
+		// 设置日志格式.
+		SetFormatter(formatter LogFormatter)
+	}
+
+	// LogFormatter
+	// 日志格式化.
+	LogFormatter interface {
+		String(line *Line) string
+	}
+
+	// TraceAdapter
+	// 链路适配器.
+	TraceAdapter interface {
+		// Keeper
+		// 协程保持.
+		Keeper() base.Keeper
+
+		// Send
+		// 发送跨度.
+		Send(span Span)
+	}
+)
