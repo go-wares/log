@@ -34,6 +34,7 @@ const (
 var (
 	defaultAutoStart           = true
 	defaultLogAdapterTermColor = true
+	defaultTraceAdapterSyncLog = true
 )
 
 const (

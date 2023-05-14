@@ -57,9 +57,10 @@ type (
 		//
 		// - 默认：无
 		// - 支持：jaeger, zipkin
-		TraceAdapter       base.TraceAdapter   `yaml:"trace_adapter" json:"trace_adapter"`
-		TraceAdapterJaeger *TraceAdapterJaeger `yaml:"trace_adapter_jaeger" json:"trace_adapter_jaeger"`
-		TraceAdapterZipkin *TraceAdapterZipkin `yaml:"trace_adapter_zipkin" json:"trace_adapter_zipkin"`
+		TraceAdapter        base.TraceAdapter   `yaml:"trace_adapter" json:"trace_adapter"`
+		TraceAdapterSyncLog *bool               `yaml:"trace_adapter_sync_log" json:"trace_adapter_sync_log"`
+		TraceAdapterJaeger  *TraceAdapterJaeger `yaml:"trace_adapter_jaeger" json:"trace_adapter_jaeger"`
+		TraceAdapterZipkin  *TraceAdapterZipkin `yaml:"trace_adapter_zipkin" json:"trace_adapter_zipkin"`
 	}
 )
 
@@ -118,6 +119,12 @@ func (o *Configuration) defaults() {
 		o.LogAdapterKafka = &LogAdapterKafka{}
 	}
 	o.LogAdapterKafka.defaults()
+
+	// 同步日志.
+	// 当记录链路日志时, 是否同步一份到日志系统.
+	if o.TraceAdapterSyncLog == nil {
+		o.TraceAdapterSyncLog = &defaultTraceAdapterSyncLog
+	}
 
 	// Jaeger 适配器.
 	if o.TraceAdapterJaeger == nil {

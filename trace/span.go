@@ -201,8 +201,8 @@ func (o *span) end() {
 	o.endTime = time.Now()
 
 	// 2. 上报链路.
-	if SpanPublish != nil {
-		SpanPublish(o)
+	if TraceManager != nil {
+		TraceManager.Send(o)
 	} else {
 		o.Release()
 	}
@@ -216,10 +216,22 @@ func (o *span) init() *span {
 
 // 记录日志.
 func (o *span) log(level base.LogLevel, format string, args ...interface{}) {
-	o.mu.Lock()
-	defer o.mu.Unlock()
+	// 1. 跨度日志.
+	func() {
+		line := adapters.NewLine(nil, level, format, args...)
+		line.Attr = o.attr
 
-	line := adapters.NewLine(nil, level, format, args...)
-	line.Attr = o.attr
-	o.lines = append(o.lines, line)
+		// 加入列表.
+		o.mu.Lock()
+		defer o.mu.Unlock()
+		o.lines = append(o.lines, line)
+	}()
+
+	// 2. 日志同步.
+	//    当记录链路(跨度)日志时, 同步写一份到日志系统中.
+	if *config.Config.TraceAdapterSyncLog {
+		line := adapters.NewLine(o.ctx, level, format, args...)
+		line.Attr = o.Attr()
+		LogManager.Send(line)
+	}
 }

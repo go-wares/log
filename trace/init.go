@@ -21,7 +21,8 @@ import (
 )
 
 var (
-	SpanPublish func(span adapters.Span)
+	LogManager   adapters.LogAdapter
+	TraceManager adapters.TraceAdapter
 )
 
 func init() {

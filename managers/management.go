@@ -44,6 +44,7 @@ type (
 	// 基础管理器.
 	Management interface {
 		GetLogAdapter() adapters.LogAdapter
+		GetTraceAdapter() adapters.TraceAdapter
 		Log(ctx context.Context, fields map[string]interface{}, level base.LogLevel, format string, args ...interface{})
 		Start()
 		Stop()
@@ -61,7 +62,8 @@ type (
 	}
 )
 
-func (o *manager) GetLogAdapter() adapters.LogAdapter { return o.logAdapter }
+func (o *manager) GetLogAdapter() adapters.LogAdapter     { return o.logAdapter }
+func (o *manager) GetTraceAdapter() adapters.TraceAdapter { return o.traceAdapter }
 
 func (o *manager) Log(ctx context.Context, fields map[string]interface{}, level base.LogLevel, format string, args ...interface{}) {
 	if o.logAdapter != nil {
@@ -184,6 +186,7 @@ func (o *manager) initLogAdapter() {
 	// 2. 加为子 Keeper.
 	if o.logAdapter != nil {
 		o.keeper.Add(o.logAdapter.Keeper())
+	} else {
 	}
 }
 
@@ -196,7 +199,9 @@ func (o *manager) initTraceAdapter() {
 
 	// 2. 加为子 Keeper.
 	if o.traceAdapter != nil {
-		trace.SpanPublish = o.traceAdapter.Send
+		trace.LogManager = o.logAdapter
+		trace.TraceManager = o.traceAdapter
+
 		o.keeper.Add(o.traceAdapter.Keeper())
 	}
 }
