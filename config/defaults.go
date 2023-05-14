@@ -23,6 +23,7 @@ const (
 	OpenTelemetrySpan  = "__OPEN_TELEMETRY_SPAN__"
 	OpenTelemetryTrace = "__OPEN_TELEMETRY_TRACE__"
 
+	OpenTracingKey          = "__OPEN_TRACING_KEY__"
 	OpenTracingParentSpanId = "X-B3-Parentspanid"
 	OpenTracingSpanId       = "X-B3-Spanid"
 	OpenTracingTraceId      = "X-B3-Traceid"
@@ -36,17 +37,21 @@ var (
 )
 
 const (
-	defaultLogAdapter                 = base.Term
+	defaultLogAdapter = base.Term
+
 	defaultLogAdapterFileBatch        = 100
 	defaultLogAdapterFileMilliseconds = 350
 	defaultLogAdapterFileExt          = "log"
 	defaultLogAdapterFilePath         = "./logs"
 	defaultLogAdapterFileFolder       = "2006-01"
 	defaultLogAdapterFileName         = "2006-01-02"
-	defaultLogAdapterKafkaHost        = "127.0.0.1:9092"
-	defaultLogAdapterKafkaTopic       = "logs"
-	defaultLogTimeFormat              = "2006-01-02 15:04:05.999"
+
+	defaultLogAdapterKafkaHost  = "127.0.0.1:9092"
+	defaultLogAdapterKafkaTopic = "logs"
+
+	defaultLogTimeFormat = "2006-01-02 15:04:05.999"
 
 	defaultTraceAdapterJaegerBatch        = 100
 	defaultTraceAdapterJaegerMilliseconds = 350
+	defaultTraceAdapterJaegerTopic        = "logs"
 )

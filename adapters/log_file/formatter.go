@@ -28,17 +28,39 @@ type (
 // String
 // 转成字符串.
 func (o *Formatter) String(line *adapters.Line) string {
-	// 1. 基础日志.
-	text := fmt.Sprintf("[%s][%s]", line.Time.Format(config.Config.LogTimeFormat), line.Level)
+	var (
+		// 日志正文
+		text = fmt.Sprintf("[%s][%s]",
+			line.Time.Format(config.Config.LogTimeFormat),
+			line.Level,
+		)
+	)
 
-	// 2. 日志正文.
-	if line.Attr != nil {
-		text = fmt.Sprintf("%s %s - %s", text, line.Attr.Json(), line.Text)
-	} else {
-		text = fmt.Sprintf("%s %s", text, line.Text)
+	// 1. 链路信息.
+	if line.Tracer {
+		text = fmt.Sprintf("%s [trace-id=%s][span-id=%s][parent-span-id=%s]",
+			text,
+			line.TraceId,
+			line.SpanId,
+			line.ParentSpanId,
+		)
 	}
 
-	// 3. 单行日志.
+	// 2. 绑定字段.
+	if line.Attr != nil {
+		text = fmt.Sprintf("%s %s",
+			text,
+			line.Attr.Json(),
+		)
+	}
+
+	// 3. 用户正文.
+	text = fmt.Sprintf("%s %s",
+		text,
+		line.Text,
+	)
+
+	// 4. 单行日志.
 	return text
 }
 

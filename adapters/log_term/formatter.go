@@ -31,16 +31,37 @@ type (
 // String
 // 转成字符串.
 func (o *Formatter) String(line *adapters.Line) string {
-	text := fmt.Sprintf("[%s][%s]", line.Time.Format(config.Config.LogTimeFormat), line.Level)
+	var (
+		// 日志正文.
+		text = fmt.Sprintf("[%s][%s]",
+			line.Time.Format(config.Config.LogTimeFormat),
+			line.Level,
+		)
+	)
 
-	// 1. 自定义字段.
-	if line.Attr != nil {
-		text = fmt.Sprintf("%s %s - %s", text, line.Attr.Json(), line.Text)
-	} else {
-		text = fmt.Sprintf("%s %s", text, line.Text)
+	// 1. 链路信息.
+	if line.Tracer {
+		text = fmt.Sprintf("%s [span-id=%s]",
+			text,
+			line.SpanId,
+		)
 	}
 
-	// 2. 日志着色.
+	// 2. 绑定字段.
+	if line.Attr != nil {
+		text = fmt.Sprintf("%s %s",
+			text,
+			line.Attr.Json(),
+		)
+	}
+
+	// 3. 用户正文.
+	text = fmt.Sprintf("%s %s",
+		text,
+		line.Text,
+	)
+
+	// 4. 日志着色.
 	if *config.Config.LogAdapterTerm.Color {
 		return o.color(line.Level, text)
 	}

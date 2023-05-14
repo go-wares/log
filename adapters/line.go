@@ -119,27 +119,15 @@ func (o *Line) openTracing(ctx context.Context) {
 	}
 
 	// 2. 基于: OpenTracing
-	if s := ctx.Value(config.OpenTracingTraceId); s != nil {
-		if str, ok := s.(string); ok && len(str) == 32 {
-			o.Tracer = true
-			o.TraceId = str
-		}
-	}
+	if g := ctx.Value(config.OpenTracingKey); g != nil {
+		v := g.(*Tracing)
 
-	// 3. 跨度参数.
-	if o.Tracer {
-		// 3.1 跨度ID.
-		if s := ctx.Value(config.OpenTracingSpanId); s != nil {
-			if str, ok := s.(string); ok && len(str) == 16 {
-				o.SpanId = str
-			}
-		}
+		o.Tracer = true
+		o.TraceId = v.TraceId.String()
+		o.SpanId = v.SpanId.String()
 
-		// 3.2 上级跨度.
-		if s := ctx.Value(config.OpenTracingParentSpanId); s != nil {
-			if str, ok := s.(string); ok && len(str) == 16 {
-				o.ParentSpanId = str
-			}
+		if p := v.ParentSpanId; p != nil {
+			o.ParentSpanId = p.String()
 		}
 	}
 }

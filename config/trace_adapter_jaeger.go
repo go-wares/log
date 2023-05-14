@@ -23,9 +23,16 @@ type (
 		Username string `yaml:"username" json:"username"`
 		Password string `yaml:"password" json:"password"`
 
-		Batch        int    `yaml:"batch" json:"batch"`
-		Milliseconds int    `yaml:"milliseconds" json:"milliseconds"`
-		Topic        string `yaml:"topic" json:"topic"`
+		// 批量阈值.
+		// 每次最多批量写入N(默认: 100)条跨度.
+		Batch int `yaml:"batch" json:"batch"`
+
+		// 上报频率.
+		// 每隔固定时长(默认: 350ms)上报一次跨度.
+		Milliseconds int `yaml:"milliseconds" json:"milliseconds"`
+
+		// 上报主题.
+		Topic string `yaml:"topic" json:"topic"`
 	}
 )
 
@@ -35,5 +42,8 @@ func (o *TraceAdapterJaeger) defaults() {
 	}
 	if o.Milliseconds == 0 {
 		o.Milliseconds = defaultTraceAdapterJaegerMilliseconds
+	}
+	if o.Topic == "" {
+		o.Topic = defaultTraceAdapterJaegerTopic
 	}
 }

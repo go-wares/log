@@ -29,11 +29,11 @@ type (
 	//     name: 2006-01-02.log
 	LogAdapterFile struct {
 		// 批量阈值.
-		// 每次最多批量写入最大数量(默认: 100)的日志.
+		// 每次最多批量写入N(默认: 100)条日志.
 		Batch int `yaml:"batch" json:"batch"`
 
 		// 保时频率.
-		// 每隔固定时长(默认: 350ms)日志执行一次刷盘操作.
+		// 每隔固定时长(默认: 350ms)刷盘一次日志.
 		Milliseconds int64 `yaml:"milliseconds" json:"milliseconds"`
 
 		// 存储位置.

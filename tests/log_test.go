@@ -36,6 +36,8 @@ func TestConfig(t *testing.T) {
 }
 
 func TestLogAdapter(t *testing.T) {
+	c1 := log.Context()
+
 	// managers.Manager.Start()
 	defer func() {
 		managers.Manager.Stop()
@@ -44,9 +46,11 @@ func TestLogAdapter(t *testing.T) {
 
 	time.Sleep(time.Millisecond)
 
-	log.Debug("debug")
-	log.Info("info")
-	log.Warn("warn")
-	log.Error("error")
-	log.Fatal("fatal")
+	log.Debugfc(c1, "debug")
+	log.Infofc(c1, "info")
+
+	c2 := log.Context(c1)
+	log.Warnfc(c2, "warn")
+	log.Errorfc(c2, "error")
+	log.Fatalfc(c2, "fatal")
 }

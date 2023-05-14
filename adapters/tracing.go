@@ -13,30 +13,21 @@
 // author: wsfuyibing <websearch@163.com>
 // date: 2023-05-14
 
-package tests
+package adapters
 
-import (
-	"github.com/go-wares/log/managers"
-	"github.com/go-wares/log/trace"
-	"testing"
-	"time"
+type (
+	// Tracing
+	// 基于 OpenTracing 构造.
+	Tracing struct {
+		SpanId, ParentSpanId SpanId
+		TraceId              TraceId
+	}
 )
 
-func TestSpan(t *testing.T) {
-	defer managers.Manager.Stop()
-
-	time.Sleep(time.Millisecond)
-
-	s1 := trace.NewSpan("parent")
-	defer s1.End()
-
-	s1.Attr().Set("uid", 1).Set("key", "value")
-	s1.Info("info message on trace")
-
-	s2 := s1.Child("child s2")
-	defer s2.End()
-
-	s3 := s1.Child("child s3")
-	defer s3.End()
-
+func NewTracing() *Tracing {
+	return &Tracing{
+		SpanId: NewSpanId(),
+	}
 }
+
+func (o *Tracing) InitTraceId() {}
