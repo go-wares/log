@@ -40,6 +40,7 @@ type (
 		lines                []*adapters.Line
 		mu                   *sync.RWMutex
 		name                 string
+		running              bool
 		spanId, parentSpanId adapters.SpanId
 		trace                adapters.Trace
 	}
@@ -187,6 +188,7 @@ func (o *span) after() {
 func (o *span) before() *span {
 	o.attr = make(adapters.Attr)
 	o.lines = make([]*adapters.Line, 0)
+	o.running = true
 	o.spanId = adapters.NewSpanId()
 	o.startTime = time.Now()
 	return o
@@ -194,10 +196,20 @@ func (o *span) before() *span {
 
 // 结束跨度.
 func (o *span) end() {
-	// 1. 结束跨度.
-	o.endTime = time.Now()
+	o.mu.Lock()
 
-	// 2. 上报链路.
+	// 1. 已经结束.
+	if !o.running {
+		o.mu.Unlock()
+		return
+	}
+
+	// 2. 结束跨度.
+	o.endTime = time.Now()
+	o.running = false
+	o.mu.Unlock()
+
+	// 3. 上报链路.
 	if TraceManager != nil {
 		TraceManager.Send(o)
 	} else {
