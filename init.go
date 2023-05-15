@@ -19,12 +19,14 @@ import (
 	"github.com/go-wares/log/config"
 	"github.com/go-wares/log/managers"
 	"sync"
+	"time"
 )
 
 func init() {
 	new(sync.Once).Do(func() {
 		if *config.Config.AutoStart {
 			go managers.Manager.Start()
+			time.Sleep(time.Millisecond)
 		}
 	})
 }

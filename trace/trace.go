@@ -78,14 +78,11 @@ func NewTraceFromContext(ctx context.Context, name string) adapters.Trace {
 }
 
 func (o *trace) Begin(name string) adapters.Span {
-	// 1. 新建跨度.
 	v := spanPool.Get().(*span).before()
 	v.name = name
 	v.parentSpanId = o.parentSpanId
 	v.trace = o
-
-	// 2. 设置上下文.
-	v.ctx = context.WithValue(o.ctx, config.OpenTelemetrySpan, v)
+	v.withCtx(o.ctx)
 	return v
 }
 

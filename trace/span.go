@@ -57,7 +57,7 @@ func NewSpanFromContext(ctx context.Context, name string) adapters.Span {
 	// 1. 基于跨度.
 	//    从跨度(Span)上开启子跨度(Span).
 	if x := ctx.Value(config.OpenTelemetrySpan); x != nil {
-		if o, ok := x.(*span); ok {
+		if o, ok := x.(adapters.Span); ok {
 			return o.Child(name)
 		}
 	}
@@ -84,14 +84,11 @@ func SpanExists(ctx context.Context) (span adapters.Span, exists bool) {
 }
 
 func (o *span) Child(name string) adapters.Span {
-	// 1. 新建跨度.
 	v := spanPool.Get().(*span).before()
 	v.name = name
 	v.parentSpanId = o.spanId
 	v.trace = o.trace
-
-	// 2. 设置上下文.
-	v.ctx = context.WithValue(o.ctx, config.OpenTelemetrySpan, o)
+	v.withCtx(o.ctx)
 	return v
 }
 
@@ -234,4 +231,8 @@ func (o *span) log(level base.LogLevel, format string, args ...interface{}) {
 		line.Attr = o.Attr()
 		LogManager.Send(line)
 	}
+}
+
+func (o *span) withCtx(ctx context.Context) {
+	o.ctx = context.WithValue(ctx, config.OpenTelemetrySpan, o)
 }
