@@ -218,13 +218,13 @@ func (o *span) init() *span {
 func (o *span) log(level base.LogLevel, format string, args ...interface{}) {
 	// 1. 跨度日志.
 	func() {
-		line := adapters.NewLine(nil, level, format, args...)
-		line.Attr = o.attr
-
 		// 加入列表.
 		o.mu.Lock()
 		defer o.mu.Unlock()
-		o.lines = append(o.lines, line)
+
+		o.lines = append(o.lines, adapters.NewLine(
+			nil, level, format, args...,
+		))
 	}()
 
 	// 2. 日志同步.
