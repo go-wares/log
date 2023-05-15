@@ -47,7 +47,7 @@ func (o *Formatter) String(line *adapters.Line) string {
 	}
 
 	// 2. 绑定字段.
-	if line.Attr != nil {
+	if len(line.Attr) > 0 {
 		text = fmt.Sprintf("%s %s",
 			text,
 			line.Attr.Json(),
