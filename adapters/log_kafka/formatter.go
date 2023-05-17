@@ -42,11 +42,11 @@ type (
 	//       "service_version": "1.0"
 	//   }
 	Data struct {
-		Content     string                 `json:"content"`
-		Keywords    map[string]interface{} `json:"fields,omitempty"`
-		Level       string                 `json:"level"`
-		Time        string                 `json:"time"`
-		TimestampMs int64                  `json:"timestamp_ms"`
+		Content  string                 `json:"content"`
+		Keywords map[string]interface{} `json:"fields,omitempty"`
+		Level    string                 `json:"level"`
+		Time     string                 `json:"time"`
+		TimeMs   int64                  `json:"time_ms"`
 
 		// +------------------------------------------------------------+
 		// | Open tracing                                               |
@@ -91,8 +91,8 @@ func (o *Formatter) Byte(line *adapters.Line) (body []byte) {
 	v := &Data{
 		Content:        line.Text,
 		Level:          line.Level.String(),
-		TimestampMs:    line.Time.UnixMilli(),
-		Time:           line.Time.Format("2006-01-02T15:04:05.999Z"),
+		Time:           line.Time.Format("2006-01-02T15:04:05.999999Z"),
+		TimeMs:         line.Time.UnixMilli(),
 		Pid:            config.Config.Pid,
 		ServiceAddr:    config.Config.Addr,
 		ServiceName:    config.Config.Name,

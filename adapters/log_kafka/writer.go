@@ -86,17 +86,6 @@ func (o *Writer) Send(manager *Manager, list []interface{}) {
 				config.Config.LogAdapterKafka.Host,
 			)
 		}
-
-		// 1.3 关闭连接.
-		if producer != nil {
-			if err = producer.Close(); err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "%v topic: %s, host: %v",
-					err,
-					config.Config.LogAdapterKafka.Topic,
-					config.Config.LogAdapterKafka.Host,
-				)
-			}
-		}
 	}()
 
 	// 2. 格式消息.
@@ -111,12 +100,7 @@ func (o *Writer) Send(manager *Manager, list []interface{}) {
 			msg = append(msg, &sarama.ProducerMessage{
 				Topic: config.Config.LogAdapterKafka.Topic,
 				Value: sarama.ByteEncoder(buf),
-				// Key:       nil,
-				// Headers:   nil,
-				// Metadata:  nil,
-				// Offset:    0,
-				Partition: 0,
-				// Timestamp: time.Time{},
+				Key:   sarama.StringEncoder(line.Level.String()),
 			})
 		}
 	}

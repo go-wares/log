@@ -37,16 +37,34 @@ type (
 		// 主机名.
 		//
 		// - 默认：127.0.0.1:9092
-		Host []string
+		Host []string `yaml:"host" json:"host"`
 
 		// 主题名.
 		//
 		// - 默认：logs
-		Topic string
+		Topic string `yaml:"topic" json:"topic"`
+
+		ProducerMaxRequest int `yaml:"producer_max_request" json:"producer_max_request"`
+		ProducerBufferSize int `yaml:"producer_buffer_size" json:"producer_buffer_size"`
+		ProducerRetry      int `yaml:"producer_retry" json:"producer_retry"`
+		ProducerTimeout    int `yaml:"producer_timeout" json:"producer_timeout"`
 	}
 )
 
 func (o *LogAdapterKafka) defaults() {
+	if o.ProducerBufferSize == 0 {
+		o.ProducerBufferSize = 256
+	}
+	if o.ProducerMaxRequest == 0 {
+		o.ProducerMaxRequest = 10
+	}
+	if o.ProducerRetry == 0 {
+		o.ProducerRetry = 3
+	}
+	if o.ProducerTimeout == 0 {
+		o.ProducerTimeout = 2
+	}
+
 	if o.Batch == 0 {
 		o.Batch = defaultLogAdapterKafkaBatch
 	}

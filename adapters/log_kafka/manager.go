@@ -112,47 +112,34 @@ func (o *Manager) getProducer() (sarama.SyncProducer, error) {
 	o.mu.Lock()
 	defer o.mu.Unlock()
 
-	var (
-		err error
-	)
-
+	// 复用连接.
 	if o.producer != nil {
 		return o.producer, nil
 	}
 
-	c := sarama.NewConfig()
+	// 准备连接.
+	var (
+		c   = sarama.NewConfig()
+		err error
+	)
 
-	// c.Admin.Retry.Max = 5
-	// c.Admin.Retry.Backoff = 100 * time.Millisecond
-	// c.Admin.Timeout = 3 * time.Second
+	// 超时配置.
+	c.Net.MaxOpenRequests = config.Config.LogAdapterKafka.ProducerMaxRequest
+	c.Net.DialTimeout = time.Duration(config.Config.LogAdapterKafka.ProducerTimeout) * time.Second
+	c.Net.ReadTimeout = time.Duration(config.Config.LogAdapterKafka.ProducerTimeout) * time.Second
+	c.Net.WriteTimeout = time.Duration(config.Config.LogAdapterKafka.ProducerTimeout) * time.Second
 
-	// c.Net.MaxOpenRequests = 5
-	// c.Net.DialTimeout = 30 * time.Second
-	// c.Net.ReadTimeout = 30 * time.Second
-	// c.Net.WriteTimeout = 30 * time.Second
-
-	// c.Metadata.Retry.Max = 3
-	// c.Metadata.Retry.Backoff = 250 * time.Millisecond
-	// c.Metadata.RefreshFrequency = 10 * time.Minute
-	// c.Metadata.Full = true
-	// c.Metadata.AllowAutoTopicCreation = true
-
-	// c.Producer.MaxMessageBytes = 1000000
-	// c.Producer.RequiredAcks = sarama.WaitForLocal
-	// c.Producer.Timeout = 10 * time.Second
-	// c.Producer.Retry.Max = 3
-	// c.Producer.Retry.Backoff = 100 * time.Millisecond
-	// c.Producer.Return.Errors = true
+	// 生产者配置.
+	c.Producer.RequiredAcks = sarama.NoResponse
+	c.Producer.Timeout = time.Duration(config.Config.LogAdapterKafka.ProducerTimeout) * time.Second
+	c.Producer.Retry.Max = config.Config.LogAdapterKafka.ProducerRetry
+	c.Producer.Retry.Backoff = 300 * time.Millisecond
+	c.Producer.Return.Errors = true
 	c.Producer.Return.Successes = true
-	// c.Producer.CompressionLevel = sarama.CompressionLevelDefault
-	// c.Producer.Transaction.Timeout = 1 * time.Minute
-	// c.Producer.Transaction.Retry.Max = 50
-	// c.Producer.Transaction.Retry.Backoff = 100 * time.Millisecond
+	c.Producer.CompressionLevel = sarama.CompressionLevelDefault
 
-	c.ChannelBufferSize = 256
-	// c.ApiVersionsRequest = true
-	// c.Version = sarama.DefaultVersion
-
+	// 其它配置
+	c.ChannelBufferSize = config.Config.LogAdapterKafka.ProducerBufferSize
 	o.producer, err = sarama.NewSyncProducer(config.Config.LogAdapterKafka.Host, c)
 	return o.producer, err
 }
