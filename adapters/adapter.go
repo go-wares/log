@@ -39,6 +39,12 @@ type (
 	// LogFormatter
 	// 日志格式化.
 	LogFormatter interface {
+		// Byte
+		// 转成字符集.
+		Byte(line *Line) []byte
+
+		// String
+		// 转成字符串.
 		String(line *Line) string
 	}
 

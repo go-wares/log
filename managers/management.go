@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"github.com/go-wares/log/adapters"
 	"github.com/go-wares/log/adapters/log_file"
+	"github.com/go-wares/log/adapters/log_kafka"
 	"github.com/go-wares/log/adapters/log_term"
 	"github.com/go-wares/log/adapters/trace_jaeger"
 	"github.com/go-wares/log/base"
@@ -151,6 +152,8 @@ func (o *manager) init() *manager {
 func (o *manager) initAdapterResource() {
 	// 架构名称.
 	adapters.Resource.
+		Set("service.name", config.Config.Name).
+		Set("service.version", config.Config.Version).
 		Set("deploy.arch", fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH)).
 		Set("deploy.go", runtime.Version()).
 		Set("deploy.pid", os.Getpid())
@@ -177,10 +180,12 @@ func (o *manager) initAdapterResource() {
 func (o *manager) initLogAdapter() {
 	// 1. 日志适配器.
 	switch config.Config.LogAdapter {
-	case base.File:
+	case base.LogFile:
 		o.logAdapter = log_file.New()
-	case base.Term:
+	case base.LogTerm:
 		o.logAdapter = log_term.New()
+	case base.LogKafka:
+		o.logAdapter = log_kafka.New()
 	}
 
 	// 2. 加为子 Keeper.
@@ -193,7 +198,7 @@ func (o *manager) initLogAdapter() {
 func (o *manager) initTraceAdapter() {
 	// 1. 链路适配器.
 	switch config.Config.TraceAdapter {
-	case base.Jaeger:
+	case base.TraceJaeger:
 		o.traceAdapter = trace_jaeger.New()
 	}
 

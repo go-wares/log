@@ -44,6 +44,13 @@ type (
 	Attr map[string]interface{}
 )
 
+func (o Attr) Count() int {
+	if o != nil {
+		return len(o)
+	}
+	return 0
+}
+
 // Set
 // 设置Key/Value.
 func (o Attr) Set(key string, value interface{}) Attr {

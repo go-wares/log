@@ -21,6 +21,11 @@ import (
 	"os"
 )
 
+const (
+	Name    = "go-wares-log"
+	Version = "1.0"
+)
+
 var (
 	// Config
 	// 配置实例.
@@ -31,6 +36,17 @@ type (
 	// Configuration
 	// 基础配置.
 	Configuration struct {
+		// 应用地址.
+		// 动态计算部署机器的IP地址清单.
+		Addr []string `yaml:"-" json:"-"`
+		Pid  int      `yaml:"-" json:"-"`
+
+		// 应用名称.
+		Name string `yaml:"name" json:"name"`
+
+		// 应用版本号.
+		Version string `yaml:"version" json:"version"`
+
 		// 自动启动.
 		// 当包加载完成后, 立即启动监听.
 		AutoStart *bool `yaml:"auto_start" json:"auto_start"`
@@ -79,6 +95,13 @@ func (o *Configuration) FatalOn() bool { return o.fatalOn }
 // +---------------------------------------------------------------------------+
 
 func (o *Configuration) defaults() {
+	o.Pid = os.Getpid()
+
+	if o.Name == "" {
+		o.Name = Name
+		o.Version = Version
+	}
+
 	if o.AutoStart == nil {
 		o.AutoStart = &defaultAutoStart
 	}

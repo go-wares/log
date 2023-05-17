@@ -38,7 +38,7 @@ var (
 )
 
 const (
-	defaultLogAdapter = base.Term
+	defaultLogAdapter = base.LogTerm
 
 	defaultLogAdapterFileBatch        = 100
 	defaultLogAdapterFileMilliseconds = 350
@@ -47,8 +47,10 @@ const (
 	defaultLogAdapterFileFolder       = "2006-01"
 	defaultLogAdapterFileName         = "2006-01-02"
 
-	defaultLogAdapterKafkaHost  = "127.0.0.1:9092"
-	defaultLogAdapterKafkaTopic = "logs"
+	defaultLogAdapterKafkaBatch        = 100
+	defaultLogAdapterKafkaMilliseconds = 350
+	defaultLogAdapterKafkaHost         = "127.0.0.1:9092"
+	defaultLogAdapterKafkaTopic        = "go-wares-log"
 
 	defaultLogTimeFormat = "2006-01-02 15:04:05.999"
 

@@ -26,10 +26,18 @@ type (
 	//     address: 127.0.0.1:9092
 	//     topic: logs
 	LogAdapterKafka struct {
+		// 批量阈值.
+		// 每次最多批量写入N(默认: 100)条日志.
+		Batch int `yaml:"batch" json:"batch"`
+
+		// 保时频率.
+		// 每隔固定时长(默认: 350ms)刷盘一次日志.
+		Milliseconds int64 `yaml:"milliseconds" json:"milliseconds"`
+
 		// 主机名.
 		//
 		// - 默认：127.0.0.1:9092
-		Host string
+		Host []string
 
 		// 主题名.
 		//
@@ -39,8 +47,14 @@ type (
 )
 
 func (o *LogAdapterKafka) defaults() {
-	if o.Host == "" {
-		o.Host = defaultLogAdapterKafkaHost
+	if o.Batch == 0 {
+		o.Batch = defaultLogAdapterKafkaBatch
+	}
+	if o.Milliseconds == 0 {
+		o.Milliseconds = defaultLogAdapterKafkaMilliseconds
+	}
+	if len(o.Host) == 0 {
+		o.Host = []string{defaultLogAdapterKafkaHost}
 	}
 	if o.Topic == "" {
 		o.Topic = defaultLogAdapterKafkaTopic

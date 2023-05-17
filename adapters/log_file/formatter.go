@@ -22,8 +22,14 @@ import (
 )
 
 type (
+	// Formatter
+	// 格式化.
 	Formatter struct{}
 )
+
+// Byte
+// 转成Byte字符集.
+func (o *Formatter) Byte(_ *adapters.Line) []byte { return nil }
 
 // String
 // 转成字符串.

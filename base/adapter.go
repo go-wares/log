@@ -26,11 +26,13 @@ type (
 )
 
 const (
-	Term LogAdapter = "term"
-	File LogAdapter = "file"
+	LogTerm  LogAdapter = "term"
+	LogFile  LogAdapter = "file"
+	LogKafka LogAdapter = "kafka"
 )
 
 const (
-	Jaeger TraceAdapter = "jaeger"
-	Zipkin TraceAdapter = "zipkin"
+	TraceJaeger TraceAdapter = "jaeger"
+	TraceZipkin TraceAdapter = "zipkin"
+	TraceKafka  TraceAdapter = "kafka"
 )

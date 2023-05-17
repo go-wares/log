@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"time"
 )
 
 type (
@@ -323,6 +324,7 @@ func (o *keeper) childrenWaiter() bool {
 		return o.children
 	}() {
 		if !v.Stopped() {
+			time.Sleep(time.Millisecond * 3)
 			return o.childrenWaiter()
 		}
 	}

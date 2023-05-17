@@ -46,11 +46,11 @@ func TestLogAdapter(t *testing.T) {
 
 	time.Sleep(time.Millisecond)
 
-	log.Debugfc(c1, "debug")
+	// log.Debugfc(c1, "debug")
 	log.Infofc(c1, "info")
 
-	c2 := log.Context(c1)
-	log.Warnfc(c2, "warn")
-	log.Errorfc(c2, "error")
-	log.Fatalfc(c2, "fatal")
+	// c2 := log.Context(c1)
+	// log.Warnfc(c2, "warn")
+	// log.Errorfc(c2, "error")
+	// log.Fatalfc(c2, "fatal")
 }

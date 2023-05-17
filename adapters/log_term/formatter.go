@@ -28,6 +28,10 @@ type (
 	Formatter struct{}
 )
 
+// Byte
+// 转成Byte字符集.
+func (o *Formatter) Byte(_ *adapters.Line) []byte { return nil }
+
 // String
 // 转成字符串.
 func (o *Formatter) String(line *adapters.Line) string {

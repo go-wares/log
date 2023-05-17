@@ -17,7 +17,7 @@ log_time_format: "2006-01-02 15:04:05.999999"
 # 4   日志适配器
 #     默认：term
 #     接受：term, file, kafka
-log_adapter: "file"
+log_adapter: "kafka"
 # 4.1 终端适配器
 #     说明：当 log_adapter 值为 term 时有效
 log_adapter_term:
@@ -31,6 +31,12 @@ log_adapter_file:
   folder: "2006-01"                             # 日志文件夹拆分
   name: "2006-01-02"                            # 日志文件名
   ext: "log"                                    # 日志文件扩展名
+# 4.3 消息适配器
+#     说明：当 log_adapter 值为 kafka 时有效
+log_adapter_kafka:
+  host:
+    - 192.168.0.130:9092
+  topic: go-wares-log
 # 5   链路适配器
 #     接受：jaeger, zipkin
 trace_adapter: "jaeger"
