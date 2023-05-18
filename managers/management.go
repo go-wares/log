@@ -173,8 +173,8 @@ func (o *manager) initAdapterResource() {
 				}
 			}
 		}
-		adapters.Resource.Set("deploy.addr", strings.Join(ls, ", "))
 	}
+	adapters.Resource.Set("deploy.addr", strings.Join(config.Config.Addr, ", "))
 }
 
 func (o *manager) initLogAdapter() {

@@ -25,6 +25,7 @@ import (
 )
 
 func TestConfig(t *testing.T) {
+	t.Logf("deploy on: %v", config.Config.Addr)
 	t.Logf("[debug:on] %v", config.Config.DebugOn())
 	t.Logf("[ info:on] %v", config.Config.InfoOn())
 	t.Logf("[ warn:on] %v", config.Config.WarnOn())

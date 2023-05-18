@@ -18,6 +18,7 @@ package config
 import (
 	"github.com/go-wares/log/base"
 	"gopkg.in/yaml.v3"
+	"net"
 	"os"
 )
 
@@ -95,13 +96,23 @@ func (o *Configuration) FatalOn() bool { return o.fatalOn }
 // +---------------------------------------------------------------------------+
 
 func (o *Configuration) defaults() {
+	// IP地址.
+	o.Addr = make([]string, 0)
+	o.ipaddr()
+
 	o.Pid = os.Getpid()
 
+	// 默认服务名.
 	if o.Name == "" {
 		o.Name = Name
+	}
+
+	// 默认版本号.
+	if o.Version == "" {
 		o.Version = Version
 	}
 
+	// 自动启动.
 	if o.AutoStart == nil {
 		o.AutoStart = &defaultAutoStart
 	}
@@ -165,6 +176,26 @@ func (o *Configuration) defaults() {
 func (o *Configuration) init() *Configuration {
 	o.scan().defaults()
 	return o
+}
+
+func (o *Configuration) ipaddr() {
+	var (
+		address   net.Addr
+		addresses []net.Addr
+		err       error
+		ok        bool
+		vn        *net.IPNet
+	)
+
+	if addresses, err = net.InterfaceAddrs(); err == nil {
+		for _, address = range addresses {
+			if vn, ok = address.(*net.IPNet); ok && !vn.IP.IsLoopback() {
+				if vn.IP.To4() != nil {
+					o.Addr = append(o.Addr, vn.IP.String())
+				}
+			}
+		}
+	}
 }
 
 func (o *Configuration) scan() *Configuration {
