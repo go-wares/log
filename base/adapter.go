@@ -11,22 +11,28 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-12
 
-package log
+package base
 
-import (
-	"github.com/go-wares/log/config"
-	"github.com/go-wares/log/managers"
-	"sync"
-	"time"
+type (
+	// LogAdapter
+	// 日志适配器.
+	LogAdapter string
+
+	// TraceAdapter
+	// 调用链适配器.
+	TraceAdapter string
 )
 
-func init() {
-	new(sync.Once).Do(func() {
-		if *config.Config.AutoStart {
-			go managers.Manager.Start()
-			time.Sleep(time.Millisecond)
-		}
-	})
-}
+const (
+	LogTerm  LogAdapter = "term"
+	LogFile  LogAdapter = "file"
+	LogKafka LogAdapter = "kafka"
+)
+
+const (
+	TraceJaeger TraceAdapter = "jaeger"
+	TraceZipkin TraceAdapter = "zipkin"
+	TraceKafka  TraceAdapter = "kafka"
+)

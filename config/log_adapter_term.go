@@ -11,22 +11,28 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-13
 
-package log
+package config
 
-import (
-	"github.com/go-wares/log/config"
-	"github.com/go-wares/log/managers"
-	"sync"
-	"time"
+type (
+	// LogAdapterTerm
+	// 终端适配器配置.
+	//
+	//   # config/log.yaml
+	//
+	//   log_adapter: term
+	//   log_adapter_term:
+	//     color: false
+	LogAdapterTerm struct {
+		// 着色.
+		// 打印到终端上的日志是否包含颜色.
+		Color *bool
+	}
 )
 
-func init() {
-	new(sync.Once).Do(func() {
-		if *config.Config.AutoStart {
-			go managers.Manager.Start()
-			time.Sleep(time.Millisecond)
-		}
-	})
+func (o *LogAdapterTerm) defaults(_ *Configuration) {
+	if o.Color == nil {
+		o.Color = &defaultLogAdapterTermColor
+	}
 }

@@ -1,0 +1,52 @@
+# 日志配置文件
+#
+# 1   自动启动
+#     默认：false
+#     说明：当设置为 true 时, 包加载后立即启动日志监听, 若需要通过
+#         编码方式修改日志参数, 此处设置为 false, 且需要在代码中
+#         显现调用 managers.Start() 方法手动启动监听.
+auto_start: true
+# 2   日志级别.
+#     默认：info
+#     接受：debug, info, warn, error, fatal
+level: "debug"
+# 3   时间格式
+#     默认：2006-01-02 15:04:05.999
+#     说明：输出日志时记录时间格式
+log_time_format: "2006-01-02 15:04:05.999999"
+# 4   日志适配器
+#     默认：term
+#     接受：term, file, kafka
+log_adapter: "kafka"
+# 4.1 终端适配器
+#     说明：当 log_adapter 值为 term 时有效
+log_adapter_term:
+  color: true                                   # 是否着色
+# 4.2 文件适配器
+#     说明：当 log_adapter 值为 file 时有效
+log_adapter_file:
+  batch: 100                                    # 批处理最大阈值(每次最多刷盘日志数量)
+  milliseconds: 350                             # 定时刷盘(每隔350ms刷盘一次)
+  path: "./logs"                                # 日志存储根目录
+  folder: "2006-01"                             # 日志文件夹拆分
+  name: "2006-01-02"                            # 日志文件名
+  ext: "log"                                    # 日志文件扩展名
+# 4.3 消息适配器
+#     说明：当 log_adapter 值为 kafka 时有效
+log_adapter_kafka:
+  host:
+    - 192.168.0.130:9092
+  topic: go-wares-log
+# 5   链路适配器
+#     接受：jaeger, zipkin
+trace_adapter: "jaeger"
+# 5.1 Jaeger 适配器
+trace_adapter_jaeger:
+  batch: 100                                    # 批处理最大阈值(每次最多上报跨度数量)
+  milliseconds: 350                             # 定时上报(每隔350ms上报一次)
+  topic: logs                                   # 上报位置(主题名)
+  endpoint: http://localhost:14268/api/traces   # 上报位置
+  username:                                     # 账号
+  password:                                     # 密码
+# 5.2 Zipkin 适配器
+trace_adapter_zipkin:

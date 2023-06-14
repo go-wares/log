@@ -11,7 +11,7 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-12
 
 package config
 
@@ -21,6 +21,6 @@ import (
 
 func init() {
 	new(sync.Once).Do(func() {
-		Config = (&Configuration{}).init().scan()
+		Config = (&Configuration{}).init()
 	})
 }

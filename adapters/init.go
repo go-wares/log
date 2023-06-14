@@ -11,22 +11,16 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-14
 
-package log
+package adapters
 
 import (
-	"github.com/go-wares/log/config"
-	"github.com/go-wares/log/managers"
 	"sync"
-	"time"
 )
 
 func init() {
 	new(sync.Once).Do(func() {
-		if *config.Config.AutoStart {
-			go managers.Manager.Start()
-			time.Sleep(time.Millisecond)
-		}
+		ID = (&id{}).init()
 	})
 }

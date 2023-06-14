@@ -11,22 +11,22 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-14
 
-package log
+package trace
 
 import (
-	"github.com/go-wares/log/config"
-	"github.com/go-wares/log/managers"
+	"github.com/go-wares/log/adapters"
 	"sync"
-	"time"
+)
+
+var (
+	LogManager   adapters.LogAdapter
+	TraceManager adapters.TraceAdapter
 )
 
 func init() {
 	new(sync.Once).Do(func() {
-		if *config.Config.AutoStart {
-			go managers.Manager.Start()
-			time.Sleep(time.Millisecond)
-		}
+		spanPool.New = func() interface{} { return (&span{}).init() }
 	})
 }

@@ -11,7 +11,7 @@
 // limitations under the License.
 //
 // author: wsfuyibing <websearch@163.com>
-// date: 2023-04-18
+// date: 2023-05-13
 
 package log
 
@@ -22,37 +22,45 @@ import (
 	"github.com/go-wares/log/managers"
 )
 
+type (
+	// Field
+	// 自定义字段.
+	//
+	//   log.Field{"key": "value"}.Info("info")
+	Field map[string]interface{}
+)
+
 // +---------------------------------------------------------------------------+
 // | Logger methods                                                            |
 // +---------------------------------------------------------------------------+
 
-func Debug(text string) {
+func (o Field) Debug(text string) {
 	if config.Config.DebugOn() {
-		managers.Manager.Log(nil, nil, base.Debug, text)
+		managers.Manager.Log(nil, o, base.Debug, text)
 	}
 }
 
-func Info(text string) {
+func (o Field) Info(text string) {
 	if config.Config.InfoOn() {
-		managers.Manager.Log(nil, nil, base.Info, text)
+		managers.Manager.Log(nil, o, base.Info, text)
 	}
 }
 
-func Warn(text string) {
+func (o Field) Warn(text string) {
 	if config.Config.WarnOn() {
-		managers.Manager.Log(nil, nil, base.Warn, text)
+		managers.Manager.Log(nil, o, base.Warn, text)
 	}
 }
 
-func Error(text string) {
+func (o Field) Error(text string) {
 	if config.Config.ErrorOn() {
-		managers.Manager.Log(nil, nil, base.Error, text)
+		managers.Manager.Log(nil, o, base.Error, text)
 	}
 }
 
-func Fatal(text string) {
+func (o Field) Fatal(text string) {
 	if config.Config.FatalOn() {
-		managers.Manager.Log(nil, nil, base.Fatal, text)
+		managers.Manager.Log(nil, o, base.Fatal, text)
 	}
 }
 
@@ -60,33 +68,33 @@ func Fatal(text string) {
 // | Logger methods with formatter                                             |
 // +---------------------------------------------------------------------------+
 
-func Debugf(format string, args ...interface{}) {
+func (o Field) Debugf(format string, args ...interface{}) {
 	if config.Config.DebugOn() {
-		managers.Manager.Log(nil, nil, base.Debug, format, args...)
+		managers.Manager.Log(nil, o, base.Debug, format, args...)
 	}
 }
 
-func Infof(format string, args ...interface{}) {
+func (o Field) Infof(format string, args ...interface{}) {
 	if config.Config.InfoOn() {
-		managers.Manager.Log(nil, nil, base.Info, format, args...)
+		managers.Manager.Log(nil, o, base.Info, format, args...)
 	}
 }
 
-func Warnf(format string, args ...interface{}) {
+func (o Field) Warnf(format string, args ...interface{}) {
 	if config.Config.WarnOn() {
-		managers.Manager.Log(nil, nil, base.Warn, format, args...)
+		managers.Manager.Log(nil, o, base.Warn, format, args...)
 	}
 }
 
-func Errorf(format string, args ...interface{}) {
+func (o Field) Errorf(format string, args ...interface{}) {
 	if config.Config.ErrorOn() {
-		managers.Manager.Log(nil, nil, base.Error, format, args...)
+		managers.Manager.Log(nil, o, base.Error, format, args...)
 	}
 }
 
-func Fatalf(format string, args ...interface{}) {
+func (o Field) Fatalf(format string, args ...interface{}) {
 	if config.Config.FatalOn() {
-		managers.Manager.Log(nil, nil, base.Fatal, format, args...)
+		managers.Manager.Log(nil, o, base.Fatal, format, args...)
 	}
 }
 
@@ -94,32 +102,32 @@ func Fatalf(format string, args ...interface{}) {
 // | Logger methods with formatter and context                                 |
 // +---------------------------------------------------------------------------+
 
-func Debugfc(ctx context.Context, format string, args ...interface{}) {
+func (o Field) Debugfc(ctx context.Context, format string, args ...interface{}) {
 	if config.Config.DebugOn() {
-		managers.Manager.Log(ctx, nil, base.Debug, format, args...)
+		managers.Manager.Log(ctx, o, base.Debug, format, args...)
 	}
 }
 
-func Infofc(ctx context.Context, format string, args ...interface{}) {
+func (o Field) Infofc(ctx context.Context, format string, args ...interface{}) {
 	if config.Config.InfoOn() {
-		managers.Manager.Log(ctx, nil, base.Info, format, args...)
+		managers.Manager.Log(ctx, o, base.Info, format, args...)
 	}
 }
 
-func Warnfc(ctx context.Context, format string, args ...interface{}) {
+func (o Field) Warnfc(ctx context.Context, format string, args ...interface{}) {
 	if config.Config.WarnOn() {
-		managers.Manager.Log(ctx, nil, base.Warn, format, args...)
+		managers.Manager.Log(ctx, o, base.Warn, format, args...)
 	}
 }
 
-func Errorfc(ctx context.Context, format string, args ...interface{}) {
+func (o Field) Errorfc(ctx context.Context, format string, args ...interface{}) {
 	if config.Config.ErrorOn() {
-		managers.Manager.Log(ctx, nil, base.Error, format, args...)
+		managers.Manager.Log(ctx, o, base.Error, format, args...)
 	}
 }
 
-func Fatalfc(ctx context.Context, format string, args ...interface{}) {
+func (o Field) Fatalfc(ctx context.Context, format string, args ...interface{}) {
 	if config.Config.FatalOn() {
-		managers.Manager.Log(ctx, nil, base.Fatal, format, args...)
+		managers.Manager.Log(ctx, o, base.Fatal, format, args...)
 	}
 }
