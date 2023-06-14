@@ -60,7 +60,7 @@ type (
 	}
 )
 
-func (o *LogAdapterFile) defaults() {
+func (o *LogAdapterFile) defaults(_ *Configuration) {
 	if o.Batch == 0 {
 		o.Batch = defaultLogAdapterFileBatch
 	}

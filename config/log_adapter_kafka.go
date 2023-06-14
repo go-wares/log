@@ -51,7 +51,7 @@ type (
 	}
 )
 
-func (o *LogAdapterKafka) defaults() {
+func (o *LogAdapterKafka) defaults(_ *Configuration) {
 	if o.ProducerBufferSize == 0 {
 		o.ProducerBufferSize = 256
 	}

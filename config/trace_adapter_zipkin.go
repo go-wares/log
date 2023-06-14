@@ -22,5 +22,5 @@ type (
 	}
 )
 
-func (o *TraceAdapterZipkin) defaults() {
+func (o *TraceAdapterZipkin) defaults(_ *Configuration) {
 }

@@ -31,7 +31,7 @@ type (
 	}
 )
 
-func (o *LogAdapterTerm) defaults() {
+func (o *LogAdapterTerm) defaults(_ *Configuration) {
 	if o.Color == nil {
 		o.Color = &defaultLogAdapterTermColor
 	}

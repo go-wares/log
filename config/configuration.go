@@ -140,19 +140,19 @@ func (o *Configuration) defaults() {
 	if o.LogAdapterTerm == nil {
 		o.LogAdapterTerm = &LogAdapterTerm{}
 	}
-	o.LogAdapterTerm.defaults()
+	o.LogAdapterTerm.defaults(o)
 
 	// 文件适配器.
 	if o.LogAdapterFile == nil {
 		o.LogAdapterFile = &LogAdapterFile{}
 	}
-	o.LogAdapterFile.defaults()
+	o.LogAdapterFile.defaults(o)
 
 	// 消息适配器/Kafka.
 	if o.LogAdapterKafka == nil {
 		o.LogAdapterKafka = &LogAdapterKafka{}
 	}
-	o.LogAdapterKafka.defaults()
+	o.LogAdapterKafka.defaults(o)
 
 	// 同步日志.
 	// 当记录链路日志时, 是否同步一份到日志系统.
@@ -164,13 +164,13 @@ func (o *Configuration) defaults() {
 	if o.TraceAdapterJaeger == nil {
 		o.TraceAdapterJaeger = &TraceAdapterJaeger{}
 	}
-	o.TraceAdapterJaeger.defaults()
+	o.TraceAdapterJaeger.defaults(o)
 
 	// Zipkin 适配器.
 	if o.TraceAdapterZipkin == nil {
 		o.TraceAdapterZipkin = &TraceAdapterZipkin{}
 	}
-	o.TraceAdapterZipkin.defaults()
+	o.TraceAdapterZipkin.defaults(o)
 }
 
 func (o *Configuration) init() *Configuration {

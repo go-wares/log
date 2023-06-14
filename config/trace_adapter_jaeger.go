@@ -36,7 +36,7 @@ type (
 	}
 )
 
-func (o *TraceAdapterJaeger) defaults() {
+func (o *TraceAdapterJaeger) defaults(c *Configuration) {
 	if o.Batch == 0 {
 		o.Batch = defaultTraceAdapterJaegerBatch
 	}
@@ -44,6 +44,10 @@ func (o *TraceAdapterJaeger) defaults() {
 		o.Milliseconds = defaultTraceAdapterJaegerMilliseconds
 	}
 	if o.Topic == "" {
-		o.Topic = defaultTraceAdapterJaegerTopic
+		if c.Name == "" {
+			o.Topic = defaultTraceAdapterJaegerTopic
+		} else {
+			o.Topic = c.Name
+		}
 	}
 }
