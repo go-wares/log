@@ -95,6 +95,7 @@ func NewTraceFromRequest(req *http.Request, name string) adapters.Trace {
 		req.Header.Set(config.OpenTracingSpanId, o.parentSpanId.String())
 	}
 
+	o.ctx = context.WithValue(req.Context(), config.OpenTelemetryTrace, o)
 	return o
 }
 
