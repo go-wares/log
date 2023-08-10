@@ -240,7 +240,7 @@ func (o *span) log(level base.LogLevel, format string, args ...interface{}) {
 	//    当记录链路(跨度)日志时, 同步写一份到日志系统中.
 	if *config.Config.TraceAdapterSyncLog {
 		line := adapters.NewLine(o.ctx, level, format, args...)
-		line.Attr = o.Attr()
+		// line.Attr = o.Attr()
 		LogManager.Send(line)
 	}
 }
