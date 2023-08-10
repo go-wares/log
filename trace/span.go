@@ -70,9 +70,13 @@ func NewSpanFromContext(ctx context.Context, name string) adapters.Span {
 // NewSpanFromRequest
 // 基于HTTP请求创建跨度.
 func NewSpanFromRequest(req *http.Request, name string) adapters.Span {
-	o := NewSpanFromContext(req.Context(), name)
-	o.(*span).ReadRequest(req)
-	return o
+	o := NewTraceFromRequest(req, name)
+	s := o.Begin(name)
+	s.(*span).ReadRequest(req)
+	return s
+	// o := NewSpanFromContext(req.Context(), name)
+	// o.(*span).ReadRequest(req)
+	// return o
 }
 
 func SpanExists(ctx context.Context) (span adapters.Span, exists bool) {
