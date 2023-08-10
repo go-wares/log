@@ -19,6 +19,7 @@ import (
 	"context"
 	"github.com/go-wares/log/adapters"
 	"github.com/go-wares/log/config"
+	"net/http"
 )
 
 type (
@@ -74,6 +75,26 @@ func NewTraceFromContext(ctx context.Context, name string) adapters.Trace {
 
 	// 6. 设置上下文.
 	o.ctx = context.WithValue(context.Background(), config.OpenTelemetryTrace, o)
+	return o
+}
+
+func NewTraceFromRequest(req *http.Request, name string) adapters.Trace {
+	o := (&trace{name: name}).init()
+
+	if s := req.Header.Get(config.OpenTracingTraceId); s != "" {
+		o.traceId = adapters.NewTraceIdFromString(s)
+	} else {
+		o.traceId = adapters.NewTraceId()
+		req.Header.Set(config.OpenTracingTraceId, o.traceId.String())
+	}
+
+	if s := req.Header.Get(config.OpenTracingSpanId); s != "" {
+		o.parentSpanId = adapters.NewSpanIdFromString(s)
+	} else {
+		o.parentSpanId = adapters.NewSpanId()
+		req.Header.Set(config.OpenTracingSpanId, o.parentSpanId.String())
+	}
+
 	return o
 }
 
